@@ -46,15 +46,17 @@ class Adoper:
         """
         att_list = ['displayName', 'userPrincipalName', 'userAccountControl', 'sAMAccountName', 'pwdLastSet']
         org_base = ','.join(['OU=' + ou for ou in org.split('.')]) + ',' + self.DC
-        res = self.conn.search(search_base=org_base,
-                               search_filter='(objectclass=user)',  # 查询数据的类型
-                               attributes=att_list,  # 查询数据的哪些属性
-                               paged_size=1000)  # 一次查询多少数据
+        res = self.conn.search(
+            search_base=org_base,
+            search_filter='(objectclass=user)',  # 查询数据的类型
+            attributes=att_list,  # 查询数据的哪些属性
+            paged_size=1000
+        )  # 一次查询多少数据
         if res:
             for user_name in self.conn.entries:
                 yield user_name['displayName']
         else:
-            print('查询失败: ', self.conn.result['description'])
+            print('查询失败:{} '.format(self.conn.result['description']))
             return None
 
     def add_org(self, org):
