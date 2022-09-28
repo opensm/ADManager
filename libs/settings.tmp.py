@@ -6,8 +6,8 @@ manager_pass = ""
 domain = ""
 
 __all__ = [
-    server_address,
-    manager_user,
-    manager_pass,
-    domain
+    "server_address",
+    "manager_user",
+    "manager_pass",
+    "domain"
 ]
