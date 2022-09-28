@@ -3,7 +3,7 @@
 
 from ldap3 import Server, Connection, ALL, NTLM
 
-from settings import *
+from libs.settings import *
 
 """
 @Author: wjx
