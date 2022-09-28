@@ -47,6 +47,7 @@ class Adoper:
         """
         att_list = ['displayName', 'userPrincipalName', 'userAccountControl', 'sAMAccountName', 'pwdLastSet']
         org_base = ','.join(['OU=' + ou for ou in org.split('.')]) + ',' + self.DC
+        print(org_base)
         res = self.conn.search(
             search_base=org_base,
             search_filter='(objectclass=user)',  # 查询数据的类型
