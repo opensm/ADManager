@@ -93,7 +93,7 @@ class Adoper:
 
 
 if __name__ == '__main__':
-    ad93 = Adoper(domain='test.csc.com', ip=server_address, pwd=manager_pass, user=manager_user)
+    ad93 = Adoper(domain=domain, ip=server_address, pwd=manager_pass, user=manager_user)
     for user in ad93.search('信息科技部.总行.cibuser'):
         print(user)
     # ad93.add_org('python02.cibuser')
