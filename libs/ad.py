@@ -60,7 +60,7 @@ class Adoper:
     def add_org(self, org):
         """
         增加组织
-        oorg: 组织，格式为：aaa.bbb 即bbb组织下的aaa组织，不包含域地址
+        org: 组织，格式为：aaa.bbb 即bbb组织下的aaa组织，不包含域地址
         """
         org_base = ','.join(['OU=' + ou for ou in org.split('.')]) + ',' + self.DC
         res = self.conn.add(org_base, object_class='OrganizationalUnit')  # 成功返回True，失败返回False
