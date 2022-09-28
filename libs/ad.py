@@ -3,7 +3,7 @@
 
 from ldap3 import Server, Connection, ALL, NTLM
 
-from libs.settings import *
+# from libs.settings import *
 
 """
 @Author: wjx
@@ -98,9 +98,4 @@ class Adoper:
             print('增加用户[ {} ]发生错误：'.format(self.conn.result['description']))
 
 
-if __name__ == '__main__':
-    ad93 = Adoper(domain=domain, ip=server_address, pwd=manager_pass, user=manager_user)
-    for user in ad93.search('信息科技部.总行.cibuser'):
-        print(user)
-    # ad93.add_org('python02.cibuser')
-    # ad93.add_user('python02.cibuser', 'python03类用户', 'python03')
+__all__ = ['Adoper']
