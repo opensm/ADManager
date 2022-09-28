@@ -65,9 +65,9 @@ class Adoper:
         org_base = ','.join(['OU=' + ou for ou in org.split('.')]) + ',' + self.DC
         res = self.conn.add(org_base, object_class='OrganizationalUnit')  # 成功返回True，失败返回False
         if res:
-            print(f'增加组织[ {org} ]成功！')
+            print(f'增加组织[ ]成功！')
         else:
-            print(f'增加组织[ {org} ]发生错误: ', self.conn.result['description'])
+            print(f'增加组织[ ]发生错误: ', self.conn.result['description'])
 
     def add_user(self, org, name, uid):
         """
@@ -87,9 +87,9 @@ class Adoper:
         res = self.conn.add(f'CN={uid},{org_base}', object_class='user',
                             attributes=user_att)
         if res:
-            print(f'增加用户[ {name} ]成功！')
+            print(f'增加用户[  ]成功！')
         else:
-            print(f'增加用户[ {name} ]发生错误：', self.conn.result['description'])
+            print(f'增加用户[ ]发生错误：', self.conn.result['description'])
 
 
 if __name__ == '__main__':
