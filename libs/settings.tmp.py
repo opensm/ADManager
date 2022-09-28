@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 基础配置
 server_address = ""
 manager_user = ""
