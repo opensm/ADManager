@@ -51,8 +51,8 @@ class Adoper:
                                attributes=att_list,  # 查询数据的哪些属性
                                paged_size=1000)  # 一次查询多少数据
         if res:
-            for user in self.conn.entries:
-                yield user['displayName']
+            for user_name in self.conn.entries:
+                yield user_name['displayName']
         else:
             print('查询失败: ', self.conn.result['description'])
             return None
@@ -65,9 +65,9 @@ class Adoper:
         org_base = ','.join(['OU=' + ou for ou in org.split('.')]) + ',' + self.DC
         res = self.conn.add(org_base, object_class='OrganizationalUnit')  # 成功返回True，失败返回False
         if res:
-            print(f'增加组织[ ]成功！')
+            print('增加组织[ {} ]成功！'.format(org))
         else:
-            print(f'增加组织[ ]发生错误: ', self.conn.result['description'])
+            print('增加组织[ {} ]发生错误" '.format(self.conn.result['description']))
 
     def add_user(self, org, name, uid):
         """
@@ -84,12 +84,15 @@ class Adoper:
             'sAMAccountName': uid,
             'pwdLastSet': -1  # 取消下次登录需要修改密码
         }
-        res = self.conn.add(f'CN={uid},{org_base}', object_class='user',
-                            attributes=user_att)
+        res = self.conn.add(
+            'CN={},{}'.format(uid, org_base),
+            object_class='user',
+            attributes=user_att
+        )
         if res:
-            print(f'增加用户[  ]成功！')
+            print('增加用户[ {} ]成功！'.format(name))
         else:
-            print(f'增加用户[ ]发生错误：', self.conn.result['description'])
+            print('增加用户[ {} ]发生错误：'.format(self.conn.result['description']))
 
 
 if __name__ == '__main__':
