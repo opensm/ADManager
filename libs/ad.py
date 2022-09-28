@@ -57,7 +57,7 @@ class Adoper:
                 yield user_name['displayName']
         else:
             print('查询失败:{} '.format(self.conn.result['description']))
-            return None
+            raise Exception("查询异常")
 
     def add_org(self, org):
         """
