@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-# coding=UTF-8
+# coding=utf-8
+# !/usr/bin/env python
+
 from ldap3 import Server, Connection, ALL, NTLM
 
 from settings import *
