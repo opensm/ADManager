@@ -24,11 +24,11 @@ def main():
     command_dict = dict(options)
     # 帮助
     p = Adopter(domain=domain, ip=server_address, user=manager_user, pwd=manager_pass)
-    if command_dict.keys() == ['-h']:
+    if '-h' in command_dict.keys():
         useage()
         sys.exit()
     # 获取监控项数据
-    elif command_dict.keys() == ['-f']:
+    elif '-f' in command_dict.keys():
         config_file = command_dict.get("-f")
         p.add_users(config_file)
     else:
