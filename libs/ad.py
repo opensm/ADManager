@@ -76,15 +76,15 @@ class Adopter:
     def add_user(
             self,
             org,
-            name,
-            uid,
+            displayName,
+            sAMAccountName,
             cn,
             mail,
+            title,
             departmentName,
-            distinguishedName,
             sAMAccountType,
             sn,
-            objectCategory
+            userAccountControl,
     ):
         """
         增加用户
@@ -98,19 +98,19 @@ class Adopter:
         user_att = {
             'mail': mail,
             'cn': cn,
-            'displayName': name,
-            'userPrincipalName': uid + '@' + self.domain,  # uid@admin组成登录名
-            'userAccountControl': 512,  # 启用账号
-            'sAMAccountName': uid,
+            'displayName': displayName,
+            'userPrincipalName': sAMAccountName + '@' + self.domain,  # uid@admin组成登录名
+            'userAccountControl': userAccountControl,  # 启用账号
+            'sAMAccountName': sAMAccountName,
             'departmentName': departmentName,
             'pwdLastSet': 1,  # 取消下次登录需要修改密码
-            'distinguishedName': distinguishedName,
             'sAMAccountType': sAMAccountType,
             'sn': sn,
-            'objectCategory': objectCategory
+            'title': title
         }
+        print(user_att)
         res = self.conn.add(
-            'CN={},{}'.format(uid, org_base),
+            'CN={},{}'.format(sAMAccountName, org_base),
             object_class='user',
             attributes=user_att
         )
@@ -130,8 +130,19 @@ class Adopter:
         with open(config_files, 'r', encoding='utf-8') as fff:
             data = fff.readlines()
         for xx in data:
-            print(xx)
-            # self.add_user()
+            split_data = xx.split('|')
+            self.add_user(
+                cn=split_data[0],
+                displayName=split_data[1],
+                mail=split_data[2],
+                title=split_data[3],
+                departmentName=split_data[4],
+                org=split_data[5],
+                sAMAccountName=split_data[6],
+                sAMAccountType=split_data[7],
+                sn=split_data[8],
+                userAccountControl=split_data[9]
+            )
 
 
 __all__ = ['Adopter']
