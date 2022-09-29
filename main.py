@@ -1,9 +1,40 @@
 from libs.ad import *
 from libs.settings import *
+import sys
+import getopt
 
-if __name__ == '__main__':
-    ad93 = Adoper(domain=domain, ip=server_address, pwd=manager_pass, user=manager_user)
-    for user in ad93.search('信息科技部.总行.cibuser'):
-        print(user)
-    # ad93.add_org('python02.cibuser')
-    # ad93.add_user('python02.cibuser', 'python03类用户', 'python03')
+
+def useage():
+    print("%s -h \t#帮助文档" % sys.argv[0])
+    print("%s -f [导入源文件] \t#导入用户数据" % sys.argv[0])
+
+
+def main():
+    if len(sys.argv) == 1:
+        useage()
+        sys.exit()
+    try:
+        options, args = getopt.getopt(
+            sys.argv[1:],
+            "f:h"
+        )
+    except getopt.GetoptError:
+        print("%s -h" % sys.argv[0])
+        sys.exit(1)
+    command_dict = dict(options)
+    # 帮助
+    p = Adoper(domain=domain, ip=server_address, user=manager_user, pwd=manager_pass)
+    if command_dict.keys() == ['-h']:
+        useage()
+        sys.exit()
+    # 获取监控项数据
+    elif command_dict.keys() == ['-f']:
+        config_file = command_dict.get("-f")
+        p.add_users(config_file)
+    else:
+        useage()
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

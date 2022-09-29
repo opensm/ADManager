@@ -3,7 +3,7 @@
 
 from ldap3 import Server, Connection, ALL, NTLM
 
-# from libs.settings import *
+import os
 
 """
 @Author: wjx
@@ -97,6 +97,19 @@ class Adoper:
             print('增加用户[ {} ]成功！'.format(name))
         else:
             print('增加用户[ {} ]发生错误：'.format(self.conn.result['description']))
+
+    def add_users(self, config_files):
+        """
+        params: config_files
+        """
+        if not os.path.exists(config_files):
+            raise FileNotFoundError(
+                "文件不存在：{}".format(config_files)
+            )
+        with open(config_files, 'r') as fff:
+            data = fff.readlines()
+        for xx in data:
+            print(xx)
 
 
 __all__ = ['Adoper']
