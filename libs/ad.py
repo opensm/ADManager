@@ -32,10 +32,12 @@ class Adopter:
         self.admin = user
         self.pwd = pwd
 
-        tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1,
-                                ca_certs_file='/etc/openldap/certs/ad/ca.cer',
-                                ca_certs_path="/etc/openldap/certs/ad"
-                                )
+        tls_configuration = Tls(
+            # validate=ssl.CERT_REQUIRED,
+            # version=ssl.PROTOCOL_TLSv1,
+            ca_certs_file='/etc/openldap/certs/ad/ca.cer',
+            ca_certs_path="/etc/openldap/certs/ad"
+        )
         self.server = Server(self.ip, get_info=ALL, use_ssl=True, tls=tls_configuration)
         self.conn = Connection(
             self.server,
