@@ -127,11 +127,11 @@ class Adopter:
             raise FileNotFoundError(
                 "文件不存在：{}".format(config_files)
             )
-        with open(config_files, 'r') as fff:
+        with open(config_files, 'r', encoding='utf-8') as fff:
             data = fff.readlines()
         for xx in data:
             print(xx)
-            #self.add_user()
+            # self.add_user()
 
 
 __all__ = ['Adopter']
