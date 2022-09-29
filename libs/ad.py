@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
-
+from ldap3 import Tls
 from ldap3 import Server, Connection, ALL, NTLM
-
+import ssl
 import os
 
 """
@@ -31,7 +31,9 @@ class Adopter:
         self.ip = ip
         self.admin = user
         self.pwd = pwd
-        self.server = Server(self.ip, get_info=ALL, use_ssl=True)
+
+        tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
+        self.server = Server(self.ip, get_info=ALL, use_ssl=True, tls=tls_configuration)
         self.conn = Connection(
             self.server,
             user=self.pre + '\\' + self.admin,
@@ -103,9 +105,10 @@ class Adopter:
             'userAccountControl': userAccountControl,  # 启用账号
             'sAMAccountName': sAMAccountName,
             'department': department,
-            'pwdLastSet': 1,  # 取消下次登录需要修改密码
+            'pwdLastSet': 0,  # 取消下次登录需要修改密码
             'sAMAccountType': sAMAccountType,
             'sn': sn,
+            'userPassword': 'P@ssw0rd',
             'title': title
         }
         print(user_att)
