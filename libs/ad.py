@@ -13,7 +13,7 @@ import os
 """
 
 
-class Adoper:
+class Adopter:
     """
     操作AD域的类
     """
@@ -73,20 +73,41 @@ class Adoper:
         else:
             print('增加组织[ {} ]发生错误" '.format(self.conn.result['description']))
 
-    def add_user(self, org, name, uid):
+    def add_user(
+            self,
+            org,
+            name,
+            uid,
+            cn,
+            mail,
+            departmentName,
+            distinguishedName,
+            sAMAccountType,
+            sn,
+            objectCategory
+    ):
         """
         增加用户
-        org：增加到该组织下
-        name：显示名称
-        uid：账号
+        params: org增加到该组织下
+        params: name：显示名称
+        params: uid：账号
+        params: departmentName
+        params: sAMAccountType
         """
         org_base = ','.join(['OU=' + ou for ou in org.split('.')]) + ',' + self.DC
         user_att = {
+            'mail': mail,
+            'cn': cn,
             'displayName': name,
             'userPrincipalName': uid + '@' + self.domain,  # uid@admin组成登录名
-            'userAccountControl': '544',  # 启用账号
+            'userAccountControl': 512,  # 启用账号
             'sAMAccountName': uid,
-            'pwdLastSet': -1  # 取消下次登录需要修改密码
+            'departmentName': departmentName,
+            'pwdLastSet': 1,  # 取消下次登录需要修改密码
+            'distinguishedName': distinguishedName,
+            'sAMAccountType': sAMAccountType,
+            'sn': sn,
+            'objectCategory': objectCategory
         }
         res = self.conn.add(
             'CN={},{}'.format(uid, org_base),
@@ -110,6 +131,7 @@ class Adoper:
             data = fff.readlines()
         for xx in data:
             print(xx)
+            #self.add_user()
 
 
-__all__ = ['Adoper']
+__all__ = ['Adopter']

@@ -23,7 +23,7 @@ def main():
         sys.exit(1)
     command_dict = dict(options)
     # 帮助
-    p = Adoper(domain=domain, ip=server_address, user=manager_user, pwd=manager_pass)
+    p = Adopter(domain=domain, ip=server_address, user=manager_user, pwd=manager_pass)
     if command_dict.keys() == ['-h']:
         useage()
         sys.exit()
