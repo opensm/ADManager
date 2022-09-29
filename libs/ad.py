@@ -81,7 +81,7 @@ class Adopter:
             cn,
             mail,
             title,
-            departmentName,
+            department,
             sAMAccountType,
             sn,
             userAccountControl,
@@ -102,7 +102,7 @@ class Adopter:
             'userPrincipalName': sAMAccountName + '@' + self.domain,  # uid@admin组成登录名
             'userAccountControl': userAccountControl,  # 启用账号
             'sAMAccountName': sAMAccountName,
-            'departmentName': departmentName,
+            'department': department,
             'pwdLastSet': 1,  # 取消下次登录需要修改密码
             'sAMAccountType': sAMAccountType,
             'sn': sn,
@@ -136,7 +136,7 @@ class Adopter:
                 displayName=split_data[1],
                 mail=split_data[2],
                 title=split_data[3],
-                departmentName=split_data[4],
+                department=split_data[4],
                 org=split_data[5],
                 sAMAccountName=split_data[6],
                 sAMAccountType=split_data[7],
