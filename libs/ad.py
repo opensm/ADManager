@@ -140,8 +140,8 @@ class Adopter:
                 org=split_data[5],
                 sAMAccountName=split_data[6],
                 sAMAccountType=split_data[7],
-                sn=split_data[8],
-                userAccountControl=split_data[9]
+                sn=split_data[9],
+                userAccountControl=split_data[10],
             )
 
 
