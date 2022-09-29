@@ -31,7 +31,7 @@ class Adopter:
         self.ip = ip
         self.admin = user
         self.pwd = pwd
-        self.server = Server(self.ip, get_info=ALL)
+        self.server = Server(self.ip, get_info=ALL, use_ssl=True)
         self.conn = Connection(
             self.server,
             user=self.pre + '\\' + self.admin,
