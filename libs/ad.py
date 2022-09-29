@@ -115,7 +115,7 @@ class Adopter:
             attributes=user_att
         )
         if res:
-            print('增加用户[ {} ]成功！'.format(name))
+            print('增加用户[ {} ]成功！'.format(displayName))
         else:
             print('增加用户[ {} ]发生错误：'.format(self.conn.result['description']))
 
