@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
 from ldap3 import Tls
-from ldap3 import Server, Connection, ALL, NTLM
+from ldap3 import Server, Connection, ALL, NTLM, MODIFY_REPLACE
 import ssl
 import os
 
@@ -33,8 +33,7 @@ class Adopter:
         self.pwd = pwd
 
         tls_configuration = Tls(
-            # validate=ssl.CERT_REQUIRED,
-            # version=ssl.PROTOCOL_TLSv1,
+            # validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1,
             ca_certs_file='/etc/openldap/certs/ad/ca.cer',
             ca_certs_path="/etc/openldap/certs/ad"
         )
@@ -89,7 +88,6 @@ class Adopter:
             mail,
             title,
             department,
-            sAMAccountType,
             sn,
             userAccountControl,
     ):
@@ -110,22 +108,37 @@ class Adopter:
             'userAccountControl': userAccountControl,  # 启用账号
             'sAMAccountName': sAMAccountName,
             'department': department,
-            'pwdLastSet': 0,  # 取消下次登录需要修改密码
-            'sAMAccountType': sAMAccountType,
+            'pwdLastSet': -1,  # 取消下次登录需要修改密码
             'sn': sn,
             'userPassword': 'P@ssw0rd',
             'title': title
         }
-        print(user_att)
         res = self.conn.add(
             'CN={},{}'.format(sAMAccountName, org_base),
-            object_class='user',
+            object_class=['top', 'organizationalPerson', 'person', 'user'],
             attributes=user_att
         )
         if res:
-            print('增加用户[ {} ]成功！'.format(displayName))
+            print('增加用户[ {} ]成功！开始生效用户！'.format(displayName))
+            self.enable_ad_user(config='CN={},{}'.format(sAMAccountName, org_base))
         else:
-            print('增加用户[ {} ]发生错误：'.format(self.conn.result['description']))
+            print('增加用户[ {} ]发生错误：'.format(self.conn.result['message']))
+
+    def enable_ad_user(self, config):
+        """ 启用ad用户 :param username: :param adconfig: :return: """
+        try:
+            print("enable_ad_user :" + config)
+            self.conn.modify(
+                config,
+                {'userAccountControl': [(MODIFY_REPLACE, ['514'])]}
+            )
+            res = self.conn.result
+            if res['result'] != 0 or res['description'] != 'success':
+                raise Exception("导入用户异常：{}".format(res['description']))
+            return False
+        except Exception as e:
+            print(e)
+            return False
 
     def add_users(self, config_files):
         """
@@ -147,9 +160,8 @@ class Adopter:
                 department=split_data[4],
                 org=split_data[5],
                 sAMAccountName=split_data[6],
-                sAMAccountType=split_data[7],
-                sn=split_data[9],
-                userAccountControl=split_data[10],
+                sn=split_data[7],
+                userAccountControl=split_data[8]
             )
 
 
