@@ -132,7 +132,7 @@ class Adopter:
         try:
             res = self.conn.extend.microsoft.modify_password(
                 dn=config,
-                new_password="P@ssword",
+                new_password="P@ssw0rd",
                 old_password=""
             )
             if not res:
