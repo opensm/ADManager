@@ -131,7 +131,7 @@ class Adopter:
     def set_password(self, config):
         try:
             res = self.conn.extend.microsoft.modify_password(
-                dn=config,
+                config,
                 new_password="P@ssw0rd",
                 old_password=""
             )
