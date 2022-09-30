@@ -130,7 +130,7 @@ class Adopter:
             print("enable_ad_user :" + config)
             self.conn.modify(
                 config,
-                {'userAccountControl': [(MODIFY_REPLACE, ['514'])]}
+                {'userAccountControl': [(MODIFY_REPLACE, ['512'])]}
             )
             res = self.conn.result
             if res['result'] != 0 or res['description'] != 'success':
