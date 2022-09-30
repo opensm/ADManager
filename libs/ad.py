@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
 from ldap3 import Tls
-from ldap3 import Server, Connection, ALL, NTLM, MODIFY_REPLACE
+from ldap3 import Server, Connection, ALL, NTLM, MODIFY_REPLACE, extend
 import ssl
 import os
 
@@ -110,7 +110,7 @@ class Adopter:
             'department': department,
             'pwdLastSet': -1,  # 取消下次登录需要修改密码
             'sn': sn,
-            'userPassword': 'P@ssw0rd',
+            # 'userPassword': 'P@ssw0rd',
             'title': title
         }
         res = self.conn.add(
@@ -120,9 +120,29 @@ class Adopter:
         )
         if res:
             print('增加用户[ {} ]成功！开始生效用户！'.format(displayName))
-            self.enable_ad_user(config='CN={},{}'.format(sAMAccountName, org_base))
+            if self.set_password(config='CN={},{}'.format(sAMAccountName, org_base)):
+                self.enable_ad_user(config='CN={},{}'.format(sAMAccountName, org_base))
         else:
-            print('增加用户[ {} ]发生错误：'.format(self.conn.result['message']))
+            print('增加用户[ {} ]发生错误：{}'.format(
+                self.conn.result['description'],
+                self.conn.result['message'])
+            )
+
+    def set_password(self, config):
+        try:
+            res = self.conn.extend.microsoft.modify_password(
+                dn=config,
+                new_password="P@ssword",
+                old_password=""
+            )
+            if not res:
+                raise Exception(res['message'])
+            print("设置密码{}成功！".format(config))
+            return True
+        except Exception as error:
+            print("设置密码{}错误：{},即将删除用户！".format(config, error))
+            self.delete_ad_user(config=config)
+            return False
 
     def enable_ad_user(self, config):
         """ 启用ad用户 :param username: :param adconfig: :return: """
@@ -130,14 +150,26 @@ class Adopter:
             print("enable_ad_user :" + config)
             self.conn.modify(
                 config,
-                {'userAccountControl': [(MODIFY_REPLACE, ['512'])]}
+                {'userAccountControl': [(MODIFY_REPLACE, ['544'])]}
             )
             res = self.conn.result
             if res['result'] != 0 or res['description'] != 'success':
-                raise Exception("导入用户异常：{}".format(res['description']))
-            return False
+                raise Exception(res['description'])
+            print("生效用户成功:{}！".format(config))
+            return True
         except Exception as e:
-            print(e)
+            print("生效用户失败：{},{}".format(config, e))
+            return False
+
+    def delete_ad_user(self, config):
+        """ 删除ad用户 :param username: :param adconfig: :return: """
+        try:
+            print("delete_ad_user :" + config)
+            res = self.conn.delete(config)
+            print("删除用户成功：{}".format(res))
+            return res
+        except Exception as e:
+            print("delete_ad_user error: %s", e)
             return False
 
     def add_users(self, config_files):
